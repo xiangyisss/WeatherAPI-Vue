@@ -1,18 +1,43 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div>
+    <input
+      type="text"
+      placeholder="Which City?"
+      v-model="cityName"
+      @keyup.enter="getDataForCity"
+    />
+    <info :weatherInfo="weatherInfo" />
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import axios from "axios";
+import Info from "@/components/Info.vue";
 
 export default {
   name: "Home",
   components: {
-    HelloWorld
+    Info
+  },
+  data() {
+    return {
+      cityName: "",
+      weatherInfo: {}
+    };
+  },
+  methods: {
+    getDataForCity() {
+      axios
+        .get(
+          `http://api.weatherapi.com/v1/current.json?key=5178f06d177f46eab3302501211201&q=${this.cityName}`
+        )
+        .then(res => {
+          this.weatherInfo = res.data;
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
   }
 };
 </script>
